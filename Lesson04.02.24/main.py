@@ -1,16 +1,12 @@
-class Car:
-       def __init__(self,color,mark,max_speed,weight):
-           self.color=color
-           self.mark = mark
-           self.max_speed = max_speed
-           self.weight =weight
+from itertools import chain
+from itertools import groupby
 
+list_a = [1, 2, 3]
+list_b = [7, 8, 9]
+list_c = [12, 13, 14]
+for i in chain(list_a, list_b, list_c):
+    if i == 14:
+      print("Найдено")
 
-
-
-Lada = Car('Зеленая','Ламборгини','666','400')
-
-print(Lada.color)
-print(Lada.mark)
-print(Lada.max_speed)
-print(Lada.weight)
+for key, group in groupby("YAaANNGGG"):
+    print(key, list(group))
