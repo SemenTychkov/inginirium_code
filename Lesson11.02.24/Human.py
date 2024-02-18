@@ -7,7 +7,7 @@ class Human:
 
     def say_hello_to(self,name_to):
         print('Hello',name_to)
-    def fell_about_yourself(self):
+    def tell_about_yourself(self):
         print('Hello, my name is',self.age)
         print('I am', self.age,'y o')
 
