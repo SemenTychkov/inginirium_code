@@ -42,6 +42,34 @@ class Board:
                     draw_cross(screen, x, y, self.size)
                 elif self.board[y][x] == -1:
                     draw_circle(screen, x, y, self.size)
+
+    def check_end(self):
+        is_end_info = is_end(self.board)
+        shift = self.W // 10
+        if is_end_info is not None:
+            type_end = is_end_info[0]
+            number = is_end_info[1]
+            if type_end == 'col':
+                x0, y0 = (number + .5) * self.size, shift
+                x1, y1 = (number + .5) * self.size, self.size * 3 - shift
+            elif type_end == 'line':
+                x0, y0 = shift ,(number + .5) * self.size
+                x1, y1 = 3 * self.size - shift, (number + .5) * self.size
+
+            elif type_end == 'diag':
+                if number == 1:
+                    x0, y0 = shift, shift
+                    x1, y1 = 3 * self.size - shift, 3 * self.size - shift
+                else:
+                    x0, y0 = 3 * self.size - shift, shift
+                    x1, y1 = shift, 3 * self.size - shift
+            pygame.draw.line(screen, red, (x0, y0), (x1, y1), 10)
+            pygame.display.update()
+            pygame.time.delay(3000)
+            return  True
+        else:
+            return  False
+
 def draw_circle(sc, x, y, size):
     x = (x + .5) * size
     y = (y + .5) * size
@@ -51,6 +79,45 @@ def draw_cross(sc, x, y, size):
     y = y * size + 3
     pygame.draw.line(sc, cross, (x, y), (x + size - 3, y + size - 3), 3)
     pygame.draw.line(sc, cross, (x + size - 3, y - 3),(x, y + size - 3), 3)
+def is_end(board):
+    for i in range(3):
+        if check_i_col(board, i):
+            return 'col', i
+        if check_i_line(board, i):
+            return 'line', i
+    if check_main_diag(board):
+        return'diag', 1
+    if check_secondary_diag(board):
+        return'diag', 2
+    return  None
+
+def check_i_line(x, i):
+    if x[i][0] == x[i][1] == x[i][2] != 0:
+        return True
+    else:
+        return False
+
+def check_i_col(x, i):
+    if x[0][i] == x[1][i] == x[2][i] != 0:
+        return True
+    else:
+        return False
+
+def check_main_diag(x):
+    if x[0][0] == x[1][1] == x[2][2] != 0:
+        return True
+    else:
+        return False
+
+def check_secondary_diag(x):
+    if x[0][2] == x[1][1] == x[2][0] != 0:
+        return True
+    else:
+        return False
+
+
+
+
 
 board = Board(W, H, 200)
 while True:
@@ -66,6 +133,6 @@ while True:
     pygame.display.update()
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_ESCAPE]:
+    if keys[pygame.K_ESCAPE] or board.check_end():
         pygame.quit()
         exit()
